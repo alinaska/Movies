@@ -215,3 +215,21 @@ export const fetchSearch = async(token: string,  encodedText: string) => {
       throw error; 
   }
 }
+
+export const requestToLogin = async (email: string, password: string, token: string) => {
+  const url = 'https://lab.strada.one/auth/login';
+  const options = {
+      method: 'POST',
+      headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ email, password })
+  };
+  try {
+      const response = await fetch(url, options);
+      return await response.json();
+  } catch (error) {
+      console.error(error);
+  };
+};
