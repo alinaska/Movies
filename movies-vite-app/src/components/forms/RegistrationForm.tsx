@@ -2,7 +2,7 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, Paper, Button, TextFi
 import { useState } from 'react';
 import { fetchRegister, fetchAuth } from '../api';
 
-interface LoginFormProps {
+interface RegistrationFormProps {
   open: boolean;
   handleClose: () => void;
   onRequestToken: (email: string) => void;
@@ -12,7 +12,7 @@ function RegistrationForm (
  { open,
   handleClose,
   onRequestToken,}
-: LoginFormProps)  {
+: RegistrationFormProps)  {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

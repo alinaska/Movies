@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import {fetchAccountId, fetchAuth } from '../api';
 import {setAccountId, setToken} from '../../store/reducer';
 
-interface TokenFormProps {
+interface LoginFormProps {
   open: boolean;
   handleClose: () => void;
 }
 
-export default function LoginForm({ open, handleClose }: TokenFormProps) {
+export default function LoginForm({ open, handleClose }: LoginFormProps) {
   const dispatch = useDispatch();
     const [enteredToken, setEnteredToken] = useState('');
             
