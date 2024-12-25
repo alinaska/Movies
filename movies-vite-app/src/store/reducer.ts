@@ -62,11 +62,7 @@ interface FiltersState {
     reducers: {
       setGenres: (state, action: PayloadAction<Genre[]>) => {
         state.genres = action.payload;
-      },
-      startGenresFetch: (state) => {
-        state.loadingGenres = true;
-        state.error = null;
-      },
+      },      
       genresFetchError: (state, action: PayloadAction<string>) => {
         state.loadingGenres = false;
         state.error = action.payload;
@@ -128,8 +124,7 @@ interface FiltersState {
   });
   
   export const {
-    setGenres,
-    startGenresFetch,
+    setGenres,    
     genresFetchError,
     toggleGenre,
     setSort,

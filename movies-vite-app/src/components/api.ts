@@ -1,3 +1,57 @@
+import { url, registrationEndpoint, authEndpoint } from "./constants";
+
+
+export const fetchRegister = async (email: string,  username: string,  password: string) => {
+
+  const apiUrl = `${url}${registrationEndpoint}`;
+  const userData = {     
+    email,
+    username,
+    password,
+};
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json', 
+      Accept: 'application/json',     
+    },
+    body: JSON.stringify(userData),
+    };  
+  try {
+    const response = await fetch(apiUrl, options);
+    const data = await response.json();
+    return data;    
+  } 
+  catch (error) {
+    console.error(error);
+    return []; 
+  }
+};
+
+export const fetchAuth = async (email: string) => {
+
+  const apiUrl = `${url}${authEndpoint}`;
+  const linkData = {
+    email,
+  };
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',      
+    },
+    body: JSON.stringify(linkData),
+    };  
+  try {
+    const response = await fetch(apiUrl, options);
+    const data = await response.json();
+    return data;    
+  } 
+  catch (error) {
+    console.error(error);
+    return []; 
+  }
+};
+
 export const fetchGenres = async (token: string) => {
 
     const url = 'https://api.themoviedb.org/3/genre/movie/list?language=ru';
