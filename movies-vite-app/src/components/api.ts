@@ -50,7 +50,7 @@ export const requestToLogin = async (email: string, password: string) => {
     
   } catch (error) {
       console.error(error);
-      return [];
+      
   };
 };
 
