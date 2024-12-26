@@ -29,20 +29,28 @@ export const fetchRegister = async (email: string,  username: string,  password:
 };
 
 export const requestToLogin = async (email: string, password: string) => {
-  const url = 'https://lab.strada.one/auth/login';
+  const apiUrl = `${url}${authEndpoint}`;
+  const userData = {     
+    email,   
+    password,
+};
   const options = {
       method: 'POST',
       headers: {
-          accept: 'application/json',
+        'Content-Type': 'application/json', 
+        Accept: 'application/json',
           
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(userData)
   };
   try {
-      const response = await fetch(url, options);
-      return await response.json();
+      const response = await fetch(apiUrl, options);
+      const data = await response.text();      
+    return data;
+    
   } catch (error) {
       console.error(error);
+      return [];
   };
 };
 

@@ -23,7 +23,7 @@ const Header = () => {
   
     const handleOpenLoginForm = () => {      
       setIsLoginFormOpen(true);      
-      handleCloseLoginForm();
+      
     };
 
     const handleCloseLoginForm = () => {

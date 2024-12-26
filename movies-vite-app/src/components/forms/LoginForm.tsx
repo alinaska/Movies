@@ -16,7 +16,8 @@ export default function LoginForm ({ open, handleClose }: LoginFormProps)  {
 
   const handleSubmit = async () => {
     const data = await requestToLogin(email, password);
-    dispatch(setToken(data))
+    dispatch(setToken(data));
+    handleClose()
   };
 
   return (
