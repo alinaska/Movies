@@ -1,6 +1,6 @@
 import {Dialog, DialogActions, DialogContent, DialogTitle, Paper, Button, TextField} from '@mui/material';
 import { useState } from 'react';
-import { fetchRegister, fetchAuth } from '../api';
+import { fetchRegister } from '../api';
 
 interface RegistrationFormProps {
   open: boolean;
@@ -31,16 +31,6 @@ function RegistrationForm (
     
   };    
 
-  const fetchAuthotization = async () => {      
-    setError(null);    
-    try {
-      await fetchAuth(email);
-    
-    } catch (error: any) {
-      console.error('Ошибка при авторизации:', error);
-    }
-    
-  };   
   
   const handleRegister = () => {
     fetchRegistration(); 
