@@ -1,7 +1,8 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Paper, Button, TextField } from '@mui/material';
 import { requestToLogin } from '../api';
 import { useState } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { setToken } from '../../store/reducer';
 
 export interface LoginFormProps {
     open: boolean;
@@ -11,9 +12,11 @@ export interface LoginFormProps {
 export default function LoginForm ({ open, handleClose }: LoginFormProps)  {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    requestToLogin(email, password, 'token');
+  const handleSubmit = async () => {
+    const data = await requestToLogin(email, password);
+    dispatch(setToken(data))
   };
 
   return (

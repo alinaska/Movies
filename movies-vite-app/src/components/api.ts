@@ -28,13 +28,13 @@ export const fetchRegister = async (email: string,  username: string,  password:
   }
 };
 
-export const requestToLogin = async (email: string, password: string, token: string) => {
+export const requestToLogin = async (email: string, password: string) => {
   const url = 'https://lab.strada.one/auth/login';
   const options = {
       method: 'POST',
       headers: {
           accept: 'application/json',
-          Authorization: `Bearer ${token}`
+          
       },
       body: JSON.stringify({ email, password })
   };
