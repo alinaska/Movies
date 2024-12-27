@@ -1,3 +1,7 @@
+export const url = 'https://lab.strada.one'
+export const registrationEndpoint = '/user/registration'
+export const authEndpoint = '/auth/login'
+
 export const initialSort = 'popular';
 export interface Genre {
     id: number;

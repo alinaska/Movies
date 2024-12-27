@@ -2,31 +2,32 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import IconButton from '@mui/material/IconButton';
+import RegistrationForm from './forms/RegistrationForm';
 import LoginForm from './forms/LoginForm';
-import TokenForm from './forms/TokenForm';
+import { Button } from '@mui/material';
 import { useState } from 'react';
 
 
 const Header = () => {
     
+    const [isRegistrationFormOpen, setIsRegistrationFormOpen] = useState(false);
     const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
-    const [isTokenFormOpen, setIsTokenFormOpen] = useState(false);
   
-    const handleOpenLoginForm = () => {
-      setIsLoginFormOpen(true);
+    const handleOpenRegistrationForm = () => {
+      setIsRegistrationFormOpen(true);
     };
   
-    const handleCloseLoginForm = () => {
-      setIsLoginFormOpen(false);
+    const handleCloseRegistrationForm = () => {
+      setIsRegistrationFormOpen(false);
     };
   
-    const handleRequestToken = () => {      
-      setIsTokenFormOpen(true);      
-      handleCloseLoginForm();
+    const handleOpenLoginForm = () => {      
+      setIsLoginFormOpen(true);      
+      
     };
 
-    const handleCloseTokenForm = () => {
-        setIsTokenFormOpen(false);
+    const handleCloseLoginForm = () => {
+        setIsLoginFormOpen(false);
           };      
   
     return (
@@ -40,7 +41,7 @@ const Header = () => {
           borderBottom: '1px solid grey',
           backgroundColor: 'blue',
           display: 'flex',
-          gap: '1300px',
+          gap: '1100px',
           marginBottom: '24px',
         }}
       >
@@ -50,18 +51,24 @@ const Header = () => {
         >
           Фильмы
         </Typography>
-        <IconButton size="medium" sx={{ color: 'white' }} onClick={handleOpenLoginForm}>
+
+       <Box sx={{ display: 'flex', flexDirection: 'row' }}> {['Зарегестрироваться', 'Войти'].map((text, index) => (
+    <Button key={index} onClick={index === 0 ? handleOpenRegistrationForm : handleOpenLoginForm} sx={{ color: 'white' }}>{text}</Button>
+  ))}
+       <IconButton size="medium" sx={{ color: 'white' }} >
+
           <AccountCircleIcon />
         </IconButton>
-  
-        <LoginForm
-          open={isLoginFormOpen}
-          handleClose={handleCloseLoginForm}
-          onRequestToken={handleRequestToken}
+       </Box>
+
+        <RegistrationForm
+          open={isRegistrationFormOpen}
+          handleClose={handleCloseRegistrationForm}
+          onRequestToken={handleOpenLoginForm}
         />
-        <TokenForm
-        open={isTokenFormOpen}
-        handleClose={handleCloseTokenForm}
+        <LoginForm
+        open={isLoginFormOpen}
+        handleClose={handleCloseLoginForm}
          
       />    
       </Box>

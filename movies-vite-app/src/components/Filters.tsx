@@ -6,8 +6,7 @@ import { fetchGenres } from './api';
 import { Sort, sortOptions } from './Sort';
 import { initialSort } from './constants';
 import MovieSearch from './MovieSearch';
-import {
-  startGenresFetch,
+import {  
   setGenres,
   genresFetchError,
   toggleGenre,
@@ -27,8 +26,7 @@ const Filters = () => {
   const { token } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(startGenresFetch());
+    const fetchData = async () => {      
       try {
         const genresData: Genre[] = await fetchGenres(token);
       dispatch(setGenres(genresData));
