@@ -1,4 +1,4 @@
-import { url, registrationEndpoint, authEndpoint } from "./constants";
+import { url, registrationEndpoint, authEndpoint, genreEndpoint, Genre } from "./constants";
 
 
 export const fetchRegister = async (email: string,  username: string,  password: string) => {
@@ -49,31 +49,48 @@ export const requestToLogin = async (email: string, password: string) => {
     return data;
     
   } catch (error) {
-      console.error(error);
-      
+      console.error(error);      
   };
 };
 
-export const fetchGenres = async (token: string) => {
-
-    const url = 'https://api.themoviedb.org/3/genre/movie/list?language=ru';
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-      };  
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      return data.genres;    
-    } 
-    catch (error) {
-      console.error(error);
-      return []; 
-    }
+export const fetchGenres = async (token: string): Promise<Genre[]> => {
+  const apiUrl = `${url}${genreEndpoint}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
   };
+
+  try {
+    const response = await fetch(apiUrl, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data) ) {
+        throw new Error("Сервер вернул не массив!");
+    }
+
+    const genres = data.filter(item => 
+      item.genre !== undefined && typeof item.genre === 'string' && item._id !== undefined && typeof item._id === 'string' && item.__v !== undefined && typeof item.__v === 'number' )
+
+    if (genres.length === 0){
+        throw new Error("Сервер вернул пустой массив!");
+    }
+    return genres;
+
+  } catch (error) {
+    console.error('Ошибка при получении жанров:', error);
+    return [];
+  }
+};
+
 
 export const fetchTopRated = async (page: number, token: string) =>{
   

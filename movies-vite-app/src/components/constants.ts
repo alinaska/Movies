@@ -1,11 +1,12 @@
 export const url = 'https://lab.strada.one'
 export const registrationEndpoint = '/user/registration'
 export const authEndpoint = '/auth/login'
-
+export const genreEndpoint = '/genre'
 export const initialSort = 'popular';
 export interface Genre {
-    id: number;
-    name: string;
+    _id: string; 
+    genre: string; 
+    __v: number;
 }
 export interface Movie {
     adult: boolean;

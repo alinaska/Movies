@@ -7,32 +7,31 @@ import { Genre } from './constants';
 import {RootState} from '../store/reducer';
 
 interface GenresListProps {
-  onChange: (genreId: number) => void;
+  onChange: (genreId: string) => void;
 }
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export const GenresList = ({ onChange }: GenresListProps) =>{
-  const { checked, genres } = useSelector((state: RootState) => state.filters);   
-
+  const { checked, genres } = useSelector((state: RootState) => state.filters);     
    return(
       <>
       <Autocomplete
       multiple
       id="multiple-limit-tags"
       options={genres as Genre[]}
-      getOptionLabel={(option) => option?.name || ''}
+      getOptionLabel={(option) => option?.genre || ''}
             
       renderOption={(props, option) => (
-        <ListItem {...props} key={option.id}>
+        <ListItem {...props} key={option._id}>
           <Checkbox
             icon={icon}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
-            checked={checked.hasOwnProperty(option.id)}
-            onChange={() => onChange(option.id)}
+            checked={checked[option._id] ?? false}
+            onChange={() => onChange(option._id)}
           />
-          <ListItemText primary={option.name} />
+          <ListItemText primary={option.genre} />
         </ListItem>
       )}
       renderInput={(params) => (
