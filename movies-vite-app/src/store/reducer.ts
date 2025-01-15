@@ -37,7 +37,7 @@ interface FiltersState {
     favorites: Movie[];
     currentPage: number;
     totalPages: number;
-    errorMessage: { [movieId: number]: string };
+    errorMessage: { [movieId: string]: string };
     
   }
 
@@ -61,8 +61,7 @@ interface FiltersState {
     initialState: initialStateFilters,
     reducers: {
       setGenres: (state, action: PayloadAction<Genre[]>) => {
-        state.genres = action.payload;
-        console.log(state.genres)
+        state.genres = action.payload;       
       },      
       genresFetchError: (state, action: PayloadAction<string>) => {        
         state.error = action.payload;
