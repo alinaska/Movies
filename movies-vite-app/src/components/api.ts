@@ -1,4 +1,4 @@
-import { url, registrationEndpoint, authEndpoint } from "./constants";
+import { url, registrationEndpoint, authEndpoint, genreEndpoint, Genre, fimsEndpoint, Movie,  } from "./constants";
 
 
 export const fetchRegister = async (email: string,  username: string,  password: string) => {
@@ -49,35 +49,48 @@ export const requestToLogin = async (email: string, password: string) => {
     return data;
     
   } catch (error) {
-      console.error(error);
-      
+      console.error(error);      
   };
 };
 
-export const fetchGenres = async (token: string) => {
-
-    const url = 'https://api.themoviedb.org/3/genre/movie/list?language=ru';
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-      };  
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      return data.genres;    
-    } 
-    catch (error) {
-      console.error(error);
-      return []; 
-    }
+export const fetchGenres = async (token: string): Promise<Genre[]> => {
+  const apiUrl = `${url}${genreEndpoint}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
   };
 
-export const fetchTopRated = async (page: number, token: string) =>{
-  
- const url = `https://api.themoviedb.org/3/movie/top_rated?language=ru&page=${page}`;
+  try {
+    const response = await fetch(apiUrl, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data) ) {
+        throw new Error("Сервер вернул не массив!");
+    }
+
+    const genres = data.filter(item => 
+      item.genre !== undefined && typeof item.genre === 'string' && item._id !== undefined && typeof item._id === 'string' && item.__v !== undefined && typeof item.__v === 'number' )
+
+    return genres;
+
+  } catch (error) {
+    console.error('Ошибка при получении жанров:', error);
+    return [];
+  }
+};
+
+
+export const fetchFilms = async (token: string): Promise<Movie[]> =>{
+  const apiUrl = `${url}${fimsEndpoint}`;  
  const options = {
   method: 'GET',
   headers: {
@@ -86,39 +99,20 @@ export const fetchTopRated = async (page: number, token: string) =>{
   }
   };
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(apiUrl, options);
     const data = await response.json();
     return data;    
   } 
   catch (error) {
     console.error(error);
     return []; 
-  }}
-  
-export const fetchPopular = async(page: number, token: string) =>{
-  
-  const url = `https://api.themoviedb.org/3/movie/popular?language=ru&page=${page}`;
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  };
-  try {
-    const response = await fetch(url, options);
-    const data = await response.json();
-    return data;    
-  } 
-  catch (error) {
-    console.error(error);
-    return []; 
-  }
-  }
+  }}  
 
- export const fetchMovieDetails = async(id: number, token: string) => {
+
+ export const fetchMovieDetails = async(id: string | undefined, token: string) => {
+  const movieDetailsEndpoint = `/movie/${id}/film`
+  const apiUrl = `${url}${movieDetailsEndpoint}`;
     
-    const url = `https://api.themoviedb.org/3/movie/${id}?language=ru`;
     const options = {
       method: 'GET',
       headers: {
@@ -127,7 +121,7 @@ export const fetchPopular = async(page: number, token: string) =>{
       }
     };
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(apiUrl, options);
     const data = await response.json();
     return data;    
   } 
@@ -137,9 +131,9 @@ export const fetchPopular = async(page: number, token: string) =>{
   }
   }
 
-export const fetchMovieCast = async (id: number, token: string) => {
-   
-    const url = `https://api.themoviedb.org/3/movie/${id}/credits?language=ru`;
+export const fetchMovieDirector = async (id: string | undefined, token: string) => {
+   const directorEndpoint= `/director/${id}`
+   const apiUrl = `${url}${directorEndpoint}`;
     const options = {
     method: 'GET',
     headers: {
@@ -148,29 +142,7 @@ export const fetchMovieCast = async (id: number, token: string) => {
     }
     };
   try {
-    const response = await fetch(url, options);
-    const data = await response.json();
-    return { cast: data.cast, crew: data.crew };   
-  } 
-  catch (error) {
-    console.error(error);
-    return { cast: [], crew: [] }; 
-  }
-  }
-
-
-  export const fetchAccountId = async (token: string) => {
-   
-    const url = `https://api.themoviedb.org/3/account/account_id`;
-    const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-    };
-  try {
-    const response = await fetch(url, options);
+    const response = await fetch(apiUrl, options);
     const data = await response.json();
     return data;   
   } 
@@ -180,7 +152,8 @@ export const fetchMovieCast = async (id: number, token: string) => {
   }
   }
 
-
+  
+  
   export const fetchGetFavorites = async (page: number, token: string, account_id: number | null)=> {
    
     const url = `https://api.themoviedb.org/3/account/${account_id}/favorite/movies?language=ru&page=${page}&sort_by=created_at.asc`;
@@ -203,7 +176,7 @@ export const fetchMovieCast = async (id: number, token: string) => {
   }
 
 
-  export const fetchAddToFavorites = async (token: string, account_id: number | null, movie_id: number) => {
+  export const fetchAddToFavorites = async (token: string, account_id: number | null, movie_id: string) => {
    
     const url = `https://api.themoviedb.org/3/account/${account_id}/favorite`;
     const options = {
@@ -227,7 +200,7 @@ export const fetchMovieCast = async (id: number, token: string) => {
   }
 
 
-  export const fetchRemoveFromFavorites = async (token: string, account_id: number | null, movie_id: number) => {
+  export const fetchRemoveFromFavorites = async (token: string, account_id: number | null, movie_id: string) => {
    
     const url = `https://api.themoviedb.org/3/account/${account_id}/favorite`;
     const options = {

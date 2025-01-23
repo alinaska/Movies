@@ -2,10 +2,10 @@ import { Genre, Movie } from "../components/constants";
 import { initialSort } from '../components/constants';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface FiltersState {
-    checked: { [key: number]: boolean };
+    checked: { [genreId: string]: boolean };
     sort: string;
     genres: Genre[];
-    loadingGenres: boolean;
+    
   error: string | null;
     yearRange: number[];        
     searchText: string;
@@ -20,7 +20,7 @@ interface FiltersState {
     checked: {},
     sort: initialSort,
     genres: [],
-    loadingGenres: false,
+    
     error: null,
     yearRange: [2000, 2024],    
     searchText: '',
@@ -37,7 +37,7 @@ interface FiltersState {
     favorites: Movie[];
     currentPage: number;
     totalPages: number;
-    errorMessage: { [movieId: number]: string };
+    errorMessage: { [movieId: string]: string };
     
   }
 
@@ -61,14 +61,14 @@ interface FiltersState {
     initialState: initialStateFilters,
     reducers: {
       setGenres: (state, action: PayloadAction<Genre[]>) => {
-        state.genres = action.payload;
+        state.genres = action.payload;       
       },      
-      genresFetchError: (state, action: PayloadAction<string>) => {
-        state.loadingGenres = false;
+      genresFetchError: (state, action: PayloadAction<string>) => {        
         state.error = action.payload;
       },
-      toggleGenre: (state, action: PayloadAction<number>) => {
-        state.checked[action.payload] = !state.checked[action.payload];
+      toggleGenre: (state, action: PayloadAction<string>) => {
+        const genreId = action.payload;
+        state.checked[genreId] = !(state.checked[genreId] ?? false);
       },
       setSort: (state, action: PayloadAction<string>) => {
         state.sort = action.payload;

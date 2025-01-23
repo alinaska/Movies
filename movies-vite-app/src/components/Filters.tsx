@@ -25,19 +25,20 @@ const Filters = () => {
   const { sort, yearRange } = useSelector((state: RootState) => state.filters);
   const { token } = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
+  useEffect(() => {    
     const fetchData = async () => {      
       try {
-        const genresData: Genre[] = await fetchGenres(token);
-      dispatch(setGenres(genresData));
-      } catch (error: any) {
+        const genresData: Genre[] = await fetchGenres(token);               
+        dispatch(setGenres(genresData));
+
+      } catch (error: any) {        
         dispatch(genresFetchError(error.message));
       }
     };    
     fetchData();    
   }, [dispatch, token]); 
 
-  const handleGenreChange = useCallback((genreId: number) => {
+  const handleGenreChange = useCallback((genreId: string) => {
     dispatch(toggleGenre(genreId));
   }, [dispatch]);
   

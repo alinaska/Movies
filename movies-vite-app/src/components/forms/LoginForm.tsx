@@ -16,7 +16,7 @@ export default function LoginForm ({ open, handleClose }: LoginFormProps)  {
 
   const handleSubmit = async () => {
     const data = await requestToLogin(email, password);
-    if (data) {
+    if (data) {      
       dispatch(setToken(data));
     } else {      
       console.error("Ошибка авторизации: токен не получен.");      

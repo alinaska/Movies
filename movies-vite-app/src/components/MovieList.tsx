@@ -4,7 +4,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { useEffect } from "react";
 import { Movie } from './constants';
 import {setSearchActive, setMovies, setFavorites, setCurrentPage, setTotalPages, setErrorMessage} from '../store/reducer';
-import {fetchPopular, fetchTopRated, fetchGetFavorites, fetchAddToFavorites, fetchRemoveFromFavorites, fetchSearch } from './api';
+import {fetchFilms, fetchGetFavorites, fetchAddToFavorites, fetchRemoveFromFavorites, fetchSearch } from './api';
 import { Link } from 'react-router-dom';
 import {RootState} from '../store/reducer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,47 +45,48 @@ const MovieList = () => {
   const addToFavorites = async (movie: Movie) => {
     dispatch(setFavorites([...favorites, movie]));
     try {
-      const success = await fetchAddToFavorites(token, account_id, movie.id);
+      const success = await fetchAddToFavorites(token, account_id, movie._id);
       if (success) {
-        dispatch(setErrorMessage({[movie.id]: '' })); 
+        dispatch(setErrorMessage({[movie._id]: '' })); 
       } 
     }
     catch (error) {
       dispatch(setFavorites(favorites.filter(favorite => favorite !== movie)));
       console.error(`Ошибка при добавлении фильма "${movie.title}" в избранное:`, error);
-      dispatch(setErrorMessage({[movie.id]: 'Ошибка. Попробуйте еще раз.' }));
+      dispatch(setErrorMessage({[movie._id]: 'Ошибка. Попробуйте еще раз.' }));
     }
   }
 
   const removeFromFavorites = async (movie: Movie) => {
     try {
-      await fetchRemoveFromFavorites(token, account_id, movie.id);      
-      dispatch(setFavorites(favorites.filter(favorite => favorite.id !== movie.id))); 
+      await fetchRemoveFromFavorites(token, account_id, movie._id);      
+      dispatch(setFavorites(favorites.filter(favorite => favorite._id !== movie._id))); 
     } catch (error) {
       console.error('Ошибка при удалении из избранного:', error);
     }
   };
 
   const isMovieFavorite = (movie: Movie) => {
-    return favorites.some(favorite => favorite.id === movie.id);
+    return favorites.some(favorite => favorite._id === movie._id);
 };
 
-const fetchMovies = async (sort: string, currentPage: number) => {
+const fetchMovies = async (sort: string) => {
   try {   
    let fetchFunction = null;
  
    if (sort === 'popular') {
-    fetchFunction = fetchPopular;
+    fetchFunction = fetchFilms;
    } else if (sort === 'top-rated') {
-    fetchFunction = fetchTopRated;
+    fetchFunction = fetchFilms;
    } else if (sort === 'favorite') {
-    fetchFunction = fetchGetFavorites;
+    fetchFunction = fetchFilms;
    }
  
    if (fetchFunction) {
-    const data = await fetchFunction(currentPage, token, account_id);     
-    dispatch(setTotalPages(data.total_pages));
-    dispatch(setMovies(data.results));
+    const data = await fetchFunction( token);     
+    dispatch(setTotalPages(data.length));
+    console.log(data)
+    dispatch(setMovies(data));
    }
   } catch (error) {
    console.error('Ошибка при получении данных:', error);   
@@ -93,8 +94,8 @@ const fetchMovies = async (sort: string, currentPage: number) => {
  }; 
 
  useEffect(() => {
-  fetchMovies(sort, currentPage);
- }, [sort, currentPage]);    
+  fetchMovies(sort);
+ }, [sort]);    
   
   const handlePageChange = (newPage: number) => {
     dispatch(setCurrentPage(newPage));
@@ -109,7 +110,7 @@ return(
        width='920px'>
   {movies && movies.map((movie) => (    
           
-<Card key={movie.id} 
+<Card key={movie._id} 
     sx={{ width: '296px', 
     height: '324px',         
     position: 'relative' }}>
@@ -117,7 +118,7 @@ return(
         component="img"
         height='240px'
         width='296px'        
-        image={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
+        image={`https://image.tmdb.org/t/p/w342`}
         alt={movie.title}
         sx={{ 
             position: 'absolute',
@@ -130,12 +131,12 @@ return(
     position: 'absolute',    
     bottom: 0 }}>
       <Link 
-      to={`/movies/${movie.id}`} 
-      key={movie.id} 
+      to={`/movies/${movie._id}`} 
+      key={movie._id} 
       style={{ textDecoration: 'none', color: 'inherit' }}>
         <CardHeader  
           title={movie.title}
-          subheader={`Рейтинг: ${movie.vote_average}`}
+          subheader={`Год: ${movie.year}`}
           titleTypographyProps={{
             variant: 'h6'    
           }}
@@ -153,7 +154,7 @@ return(
                 addToFavorites(movie);}               
             }}>
           <StarIcon color={isMovieFavorite(movie) ? 'warning' : 'inherit'} />
-          </IconButton>{errorMessage[movie.id] && (
+          </IconButton>{errorMessage[movie._id] && (
                 <Typography 
                   variant="caption" 
                   sx={{ 
@@ -166,7 +167,7 @@ return(
                     zIndex: 100 
                   }}
                 >
-                  {errorMessage[movie.id]}
+                  {errorMessage[movie._id]}
                 </Typography>
               )}
       </CardActions>
