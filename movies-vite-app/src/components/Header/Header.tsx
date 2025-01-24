@@ -2,8 +2,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import IconButton from '@mui/material/IconButton';
-import RegistrationForm from './forms/RegistrationForm';
-import LoginForm from './forms/LoginForm';
+import RegistrationForm from '../forms/RegistrationForm';
+import LoginForm from '../forms/LoginForm';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Stack from '@mui/material/Stack';
@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar>
+    <AppBar position='static' sx={{ marginBottom: '12px' }}>
       <Toolbar>
         <Typography variant="h6" sx={{ textAlign: 'left', padding: '18px', color: 'white', flexGrow: 1, }}>
           Фильмы

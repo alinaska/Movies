@@ -19,7 +19,8 @@ export interface Movie {
     overview: string;
     year: number;
     __v: number;
-    _id: string
+    _id: string;
+    poster_path: string;
   }
 
   
