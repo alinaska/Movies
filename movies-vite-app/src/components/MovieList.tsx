@@ -6,6 +6,7 @@ import {
   IconButton,
   CardHeader,
   Typography,
+  CardContent,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect } from "react";
@@ -139,7 +140,7 @@ const MovieList = () => {
       display: "flex",
       flexWrap: "wrap",
       justifyContent: "center",
-      maxWidth: '1050px',
+      maxWidth: '1095px',
       height: "max-content",
       gap: "16px",
       padding: "12px",
@@ -150,45 +151,63 @@ const MovieList = () => {
           key={movie._id}
           sx={{
             width: "245px",
-            maxHeight: "400px",
+            minHeight: "400px",
+            maxHeight: 'fit-content',
             marginTop: "10px",
             maxWidth: { xs: "95%", sm: "85%", md: "45%", lg: "100%" },
           }}
         >
-          <CardMedia
-            component="img"
-            alt={movie.title}
-            height="240"
-            width="296"
-            image={movie.poster_path}
-            sx={{ backgroundSize: 'contain' }}
-          />
-          <Link
-            to={`/movies/${movie._id}`}
-            key={movie._id}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <CardHeader
-              title={movie.title}
-              subheader={`Год: ${movie.year}`}
-              titleTypographyProps={{
-                variant: "h6",
-              }}
-              subheaderTypographyProps={{
-                variant: "body2",
-              }}
+          <Link to={`/movies/${movie._id}`} key={movie._id} style={{ textDecoration: "none", color: "inherit" }}>
+            <CardMedia
+              component="img"
+              alt={movie.title}
+              height="240px"
+              width="296px"
+              image={movie.poster_path}
+              sx={{ backgroundSize: 'contain' }}
             />
           </Link>
-          <CardActions>
-            <IconButton
-              size="small"
-              onClick={() => handleIconButtonClick(movie)}
-            >
-              <StarIcon
-                color={isMovieFavorite(movie) ? "warning" : "inherit"}
+            <CardContent>
+              <CardHeader
+                title={movie.title}
+                subheader={`Год: ${movie.year}`}
+                action={
+                  <>
+                    <IconButton size="small" onClick={() => handleIconButtonClick(movie)}>
+                      <StarIcon color={isMovieFavorite(movie) ? "warning" : "inherit"} />
+                    </IconButton>
+                    {errorMessage[movie._id] && (
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "-70%",
+                          transform: "translate(-50%, -50%)",
+                          backgroundColor: "rgba(255, 165, 0, 0.8)",
+                          padding: "2px 8px",
+                          zIndex: 100,
+                        }}
+                      >
+                        {errorMessage[movie._id]}
+                      </Typography>
+                    )}
+                  </>
+                }
+                sx={{ padding: 0 }}
+                titleTypographyProps={{
+                  variant: "h6",
+                }}
+                subheaderTypographyProps={{
+                  variant: "body2",
+                }}
               />
-            </IconButton>
-            {errorMessage[movie._id] && (
+            </CardContent>
+          {/* <CardActions> */}
+            {/* <IconButton size="small" onClick={() => handleIconButtonClick(movie)}>
+              <StarIcon color={isMovieFavorite(movie) ? "warning" : "inherit"} />
+            </IconButton> */}
+            {/* {errorMessage[movie._id] && (
               <Typography
                 variant="caption"
                 sx={{
@@ -204,7 +223,7 @@ const MovieList = () => {
                 {errorMessage[movie._id]}
               </Typography>
             )}
-          </CardActions>
+          </CardActions> */}
         </Card>
       ))}
     </Paper>
